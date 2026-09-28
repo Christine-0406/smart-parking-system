@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Parking Session</title>
+</head>
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Start Parking Session</h3>
+
+    <form method="POST" action="{{ url_for('start_session') }}">
+
+    <label for="vehicle_id">Select Vehicle:</label>
+    <select name="vehicle_id" id="vehicle_id" required>
+        <option value="">-- Select Vehicle --</option>
+
+        {% for vehicle in vehicles %}
+            <option value="{{ vehicle.vehicle_id }}">
+                {{ vehicle.registration_number }} - {{ vehicle.vehicle_model }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <label for="slot_id">Select Parking Slot:</label>
+    <select name="slot_id" id="slot_id" required>
+        <option value="">-- Select Parking Slot --</option>
+
+        {% for slot in parking_slots %}
+            <option value="{{ slot.slot_id }}">
+                {{ slot.slot_number }} - {{ slot.slot_type }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <button type="submit">Start Parking</button>
+
+</form>
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

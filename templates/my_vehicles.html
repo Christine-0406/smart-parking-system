@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vehicles</title>
+</head>
+
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>My Vehicles</h3>
+
+    {% if vehicles %}
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Vehicle ID</th>
+            <th>Registration Number</th>
+            <th>Vehicle Type</th>
+            <th>Vehicle Model</th>
+            <th>Vehicle Color</th>
+        </tr>
+
+        {% for vehicle in vehicles %}
+
+        <tr>
+            <td>{{ vehicle.vehicle_id }}</td>
+            <td>{{ vehicle.registration_number }}</td>
+            <td>{{ vehicle.vehicle_type }}</td>
+            <td>{{ vehicle.vehicle_model }}</td>
+            <td>{{ vehicle.vehicle_color }}</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>You have not registered any vehicles yet.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/register_vehicle">
+        Register Another Vehicle
+    </a>
+
+    <br><br>
+
+    <a href="/dashboard">
+        Back to Dashboard
+    </a>
+
+</body>
+</html>

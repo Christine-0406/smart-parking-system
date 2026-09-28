@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History</title>
+</head>
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Payment History</h3>
+
+    {% if payments %}
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Payment ID</th>
+            <th>Session ID</th>
+            <th>Amount</th>
+            <th>Payment Method</th>
+            <th>Reference</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for payment in payments %}
+        <tr>
+            <td>{{ payment.payment_id }}</td>
+            <td>{{ payment.session_id }}</td>
+            <td>KSh {{ "%.2f"|format(payment.amount) }}</td>
+            <td>{{ payment.payment_method }}</td>
+            <td>{{ payment.payment_reference or "—" }}</td>
+            <td>{{ payment.payment_date }}</td>
+            <td>{{ payment.status }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>No payments have been made yet.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

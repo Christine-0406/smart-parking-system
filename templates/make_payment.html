@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+</head>
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Make Payment</h3>
+
+    <hr>
+
+    <p>
+        <strong>Parking Session:</strong>
+        {{ parking_session.session_id }}
+    </p>
+
+    <p>
+        <strong>Amount Due:</strong>
+        KSh {{ "%.2f"|format(parking_session.total_amount) }}
+    </p>
+
+    <form method="POST">
+
+        <label for="payment_method">Payment Method:</label><br>
+
+        <select id="payment_method" name="payment_method" required>
+            <option value="">-- Select Payment Method --</option>
+            <option value="M-Pesa">M-Pesa</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+        </select>
+
+        <br><br>
+
+        <label for="payment_reference">
+            Payment Reference:
+        </label><br>
+
+        <input
+            type="text"
+            id="payment_reference"
+            name="payment_reference"
+            placeholder="e.g. M-Pesa transaction code"
+        >
+
+        <br><br>
+
+        <button type="submit">Confirm Payment</button>
+
+    </form>
+
+    <br>
+
+    <a href="/parking_sessions">Back to Parking Sessions</a>
+
+</body>
+</html>

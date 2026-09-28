@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Sessions</title>
+</head>
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>My Parking Sessions</h3>
+
+    {% if parking_sessions %}
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Vehicle</th>
+            <th>Model</th>
+            <th>Parking Slot</th>
+            <th>Entry Time</th>
+            <th>Exit Time</th>
+            <th>Hourly Rate</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for parking in parking_sessions %}
+        <tr>
+            <td>{{ parking.registration_number }}</td>
+            <td>{{ parking.vehicle_model }}</td>
+            <td>{{ parking.slot_number }}</td>
+            <td>{{ parking.entry_time }}</td>
+            <td>
+                {% if parking.exit_time %}
+                    {{ parking.exit_time }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>
+                KSh {{ "%.2f"|format(parking.hourly_rate) }}
+            </td>
+            <td>
+                {% if parking.total_amount %}
+                    KSh {{ "%.2f"|format(parking.total_amount) }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ parking.status }}</td>
+            <td>
+                    {% if parking.status == "Active" %}
+        <a href="/end_session/{{ parking.session_id }}">
+            End Parking
+        </a>
+    {% else %}
+        <a href="/make_payment/{{ parking.session_id }}">
+            Make Payment
+        </a>
+    {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>You currently have no parking sessions.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

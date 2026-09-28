@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Make Reservation - Smart Parking System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        h2, h3 {
+            margin-bottom: 15px;
+        }
+
+        /* Parking slots container */
+        .parking-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* Individual parking slot */
+        .parking-slot {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid;
+            font-family: Arial, sans-serif;
+        }
+
+        .slot-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .slot-type {
+            margin-bottom: 8px;
+        }
+
+        .slot-status {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* AVAILABLE - GREEN */
+        .parking-slot.available {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        /* RESERVED - ORANGE */
+        .parking-slot.reserved {
+            background-color: #fff3cd;
+            border-color: #fd7e14;
+            color: #856404;
+        }
+
+        /* OCCUPIED - RED */
+        .parking-slot.occupied {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* Reserve button */
+        .reserve-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Available slot button */
+        .parking-slot.available .reserve-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Selected slot */
+        .parking-slot.selected {
+            border: 4px solid #007bff;
+            transform: scale(1.03);
+        }
+
+        /* Disabled buttons */
+        .reserve-btn:disabled {
+            background-color: #999;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        /* Form fields */
+        select,
+        input {
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 15px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Selected slot message */
+        #selected-slot-message {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Make Parking Reservation</h3>
+
+    <form method="POST" action="/make_reservation">
+
+        <!-- VEHICLE SELECTION -->
+
+        <label for="vehicle_id">Select Vehicle:</label><br>
+
+        <select id="vehicle_id" name="vehicle_id" required>
+
+            <option value="">-- Select Vehicle --</option>
+
+            {% for vehicle in vehicles %}
+
+            <option value="{{ vehicle.vehicle_id }}">
+                {{ vehicle.registration_number }}
+                - {{ vehicle.vehicle_type }}
+                - {{ vehicle.vehicle_model }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <br><br>
+
+
+        <!-- PARKING SLOTS -->
+
+        <h2>Parking Slots</h2>
+
+        <p id="selected-slot-message">
+            Please select an available parking slot.
+        </p>
+
+
+        <div class="parking-slots">
+
+            {% for slot in parking_slots %}
+
+                <div class="parking-slot {{ slot.status|lower }}"
+                     id="slot-{{ slot.slot_id }}">
+
+                    <div class="slot-number">
+                        {{ slot.slot_number }}
+                    </div>
+
+                    <div class="slot-type">
+                        {{ slot.slot_type }}
+                    </div>
+
+                    <div class="slot-status">
+                        {{ slot.status }}
+                    </div>
+
+
+                    {% if slot.status == 'Available' %}
+
+                        <button
+                            type="button"
+                            class="reserve-btn"
+                            onclick="selectSlot(
+                                '{{ slot.slot_id }}',
+                                '{{ slot.slot_number }}'
+                            )">
+
+                            Select
+
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="button"
+                            class="reserve-btn"
+                            disabled>
+
+                            {{ slot.status }}
+
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- HIDDEN SLOT ID -->
+
+        <input
+            type="hidden"
+            id="slot_id"
+            name="slot_id"
+            required>
+
+
+        <br>
+
+
+        <!-- RESERVATION DATE -->
+
+        <label for="reservation_date">
+            Reservation Date:
+        </label>
+
+        <br>
+
+        <input
+            type="date"
+            id="reservation_date"
+            name="reservation_date"
+            required>
+
+
+        <br><br>
+
+
+        <!-- START TIME -->
+
+        <label for="start_time">
+            Start Time:
+        </label>
+
+        <br>
+
+        <input
+            type="time"
+            id="start_time"
+            name="start_time"
+            required>
+
+
+        <br><br>
+
+
+        <!-- END TIME -->
+
+        <label for="end_time">
+            End Time:
+        </label>
+
+        <br>
+
+        <input
+            type="time"
+            id="end_time"
+            name="end_time"
+            required>
+
+
+        <br><br>
+
+        <!-- SUBMIT -->
+
+        <button type="submit">
+            Make Reservation
+        </button>
+
+    </form>
+
+
+    <br>
+
+    <a href="/dashboard">
+        Back to Dashboard
+    </a>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        function selectSlot(slotId, slotNumber) {
+
+            // Put selected slot ID into hidden input
+            document.getElementById("slot_id").value = slotId;
+
+            // Remove selected styling from all slots
+            const slots = document.querySelectorAll(".parking-slot");
+
+            slots.forEach(function(slot) {
+                slot.classList.remove("selected");
+            });
+
+            // Highlight selected slot
+            const selectedSlot =
+                document.getElementById("slot-" + slotId);
+
+            selectedSlot.classList.add("selected");
+
+            // Update message
+            document.getElementById("selected-slot-message").innerText =
+                "Selected parking slot: " + slotNumber;
+
+        }
+
+    </script>
+
+</body>
+</html>

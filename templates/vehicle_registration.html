@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Registration</title>
+</head>
+
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Register Your Vehicle</h3>
+
+    <form method="POST" action="/register_vehicle">
+
+        <label for="registration_number">
+            Vehicle Registration Number:
+        </label><br>
+
+        <input
+            type="text"
+            id="registration_number"
+            name="registration_number"
+            placeholder="e.g. KDA 123A"
+            required
+        >
+
+        <br><br>
+
+
+        <label for="vehicle_type">
+            Vehicle Type:
+        </label><br>
+
+        <select id="vehicle_type" name="vehicle_type" required>
+
+            <option value="">-- Select Vehicle Type --</option>
+            <option value="Car">Car</option>
+            <option value="Motorcycle">Motorcycle</option>
+            <option value="Van">Van</option>
+            <option value="Truck">Truck</option>
+            <option value="Bus">Bus</option>
+
+        </select>
+
+        <br><br>
+
+
+        <label for="vehicle_model">
+            Vehicle Model:
+        </label><br>
+
+        <input
+            type="text"
+            id="vehicle_model"
+            name="vehicle_model"
+            placeholder="e.g. Toyota Premio"
+            required
+        >
+
+        <br><br>
+
+
+        <label for="vehicle_color">
+            Vehicle Color:
+        </label><br>
+
+        <input
+            type="text"
+            id="vehicle_color"
+            name="vehicle_color"
+            placeholder="e.g. Black"
+            required
+        >
+
+        <br><br>
+
+
+        <button type="submit">
+            Register Vehicle
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+
+</html>

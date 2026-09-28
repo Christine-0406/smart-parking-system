@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Client Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        .confirmed {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .reserved {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .occupied {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .start-button {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .start-button:hover {
+            background-color: #218838;
+        }
+
+        .menu {
+            line-height: 2;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Welcome, {{ session["username"] }}!</h3>
+
+    <p>
+        Your role: {{ session["role"] }}
+    </p>
+
+    <hr>
+
+<!-- =========================================
+     PARKING VIOLATION WARNINGS
+========================================== -->
+
+{% if violations %}
+
+<div style="
+    background-color: #f8d7da;
+    border: 2px solid #dc3545;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+">
+
+    <h3 style="margin-top: 0;">
+        ⚠️ Parking Violation Warning
+    </h3>
+
+    {% for violation in violations %}
+
+        <p>
+            <strong>{{ violation.violation_type }}</strong>
+        </p>
+
+        <p>
+            {{ violation.description }}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ violation.status }}
+        </p>
+
+        <hr>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+    <!-- =========================================
+         CLIENT RESERVATIONS
+    ========================================== -->
+
+    <h3>My Confirmed Reservations</h3>
+
+    {% if reservations %}
+
+    <table border="1">
+
+        <tr>
+            <th>Vehicle</th>
+            <th>Slot</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for reservation in reservations %}
+
+        <tr>
+
+            <td>
+                {{ reservation.registration_number }}
+            </td>
+
+            <td>
+                {{ reservation.slot_number }}
+            </td>
+
+            <td>
+                {{ reservation.reservation_date }}
+            </td>
+
+            <td>
+                {{ reservation.start_time }}
+            </td>
+
+            <td>
+                {{ reservation.end_time }}
+            </td>
+
+            <td>
+                {{ reservation.payment_status }}
+            </td>
+
+            <td class="confirmed">
+                {{ reservation.status }}
+            </td>
+
+            <td>
+
+                <td>
+
+    {% if reservation.status == "Confirmed" %}
+
+        <a
+            href="{{ url_for('start_session', reservation_id=reservation.reservation_id) }}"
+            class="start-button">
+
+            Start Parking
+
+        </a>
+
+    {% elif reservation.status == "Active" %}
+
+        <td>
+
+    {% if reservation.status == "Confirmed" %}
+
+        <a
+            href="{{ url_for('start_session', reservation_id=reservation.reservation_id) }}"
+            class="start-button">
+
+            Start Parking
+
+        </a>
+
+    {% elif reservation.status == "Active" and reservation.session_id %}
+
+        <a
+            href="{{ url_for('end_session', session_id=reservation.session_id) }}"
+            class="start-button">
+
+            End Parking
+
+        </a>
+
+    {% endif %}
+
+</td>
+
+    {% else %}
+
+        Completed
+
+    {% endif %}
+
+</td>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>
+        You currently have no confirmed reservations.
+    </p>
+
+    {% endif %}
+
+
+    <br>
+
+    <hr>
+
+
+    <!-- =========================================
+         PARKING SLOTS
+    ========================================== -->
+
+    <h3>Parking Slots</h3>
+
+    <table border="1">
+
+        <tr>
+            <th>Slot Number</th>
+            <th>Vehicle Type</th>
+            <th>Status</th>
+        </tr>
+
+        {% for slot in parking_slots %}
+
+        <tr>
+
+            <td>
+                {{ slot.slot_number }}
+            </td>
+
+            <td>
+                {{ slot.slot_type }}
+            </td>
+
+            <td>
+
+                {% if slot.status == "Available" %}
+
+                    <span style="color: green; font-weight: bold;">
+                        🟢 Available
+                    </span>
+
+                {% elif slot.status == "Reserved" %}
+
+                    <span style="color: orange; font-weight: bold;">
+                        🟠 Reserved
+                    </span>
+
+                {% elif slot.status == "Occupied" %}
+
+                    <span style="color: red; font-weight: bold;">
+                        🔴 Occupied
+                    </span>
+
+                {% else %}
+
+                    {{ slot.status }}
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+
+    <br>
+
+    <hr>
+
+
+    <!-- =========================================
+         MENU
+    ========================================== -->
+
+    <h3>Client Services</h3>
+
+    <ul class="menu">
+
+        <li>
+            <a href="/register_vehicle">
+                Register Vehicle
+            </a>
+        </li>
+
+        <li>
+            <a href="/make_reservation">
+                Make Reservation
+            </a>
+        </li>
+
+        <li>
+            <a href="/parking_rates">
+                View Parking Rates
+            </a>
+        </li>
+
+        <li>
+            <a href="/parking_sessions">
+                View Parking Sessions
+            </a>
+        </li>
+
+        <li>
+            <a href="/payments">
+                View Payments
+            </a>
+        </li>
+
+        <li>
+            View Violations
+        </li>
+
+        <li>
+            <a href="/my_vehicles">
+                My Vehicles
+            </a>
+        </li>
+
+    </ul>
+
+
+    <br>
+
+    <a href="/logout">
+        Logout
+    </a>
+
+</body>
+
+</html>

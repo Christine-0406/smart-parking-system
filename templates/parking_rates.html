@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Rates</title>
+</head>
+<body>
+
+    <h2>Smart Parking System</h2>
+
+    <h3>Current Parking Rate</h3>
+
+    <hr>
+
+    <p>
+        <strong>Total Parking Slots:</strong>
+        {{ total_slots }}
+    </p>
+
+    <p>
+        <strong>Occupied/Reserved Slots:</strong>
+        {{ occupied_slots }}
+    </p>
+
+    <p>
+        <strong>Current Occupancy:</strong>
+        {{ "%.2f"|format(occupancy_percentage) }}%
+    </p>
+
+    <h3>
+        Current Rate:
+        KSh {{ "%.2f"|format(hourly_rate) }} per hour
+    </h3>
+
+    <hr>
+
+    <h4>Pricing Rules</h4>
+
+    <ul>
+        <li>0% – 50% occupancy → KSh 150 per hour</li>
+        <li>Above 50% – 80% occupancy → KSh 225 per hour</li>
+        <li>Above 80% – 100% occupancy → KSh 300 per hour</li>
+    </ul>
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

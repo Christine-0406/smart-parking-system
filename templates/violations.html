@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Violations</title>
+</head>
+
+<body>
+
+    <h2>My Parking Violations</h2>
+
+    {% if violations %}
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Violation ID</th>
+            <th>Vehicle</th>
+            <th>Slot</th>
+            <th>Violation Type</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for violation in violations %}
+        <tr>
+            <td>{{ violation.violation_id }}</td>
+            <td>{{ violation.registration_number }}</td>
+            <td>{{ violation.slot_number or "N/A" }}</td>
+            <td>{{ violation.violation_type }}</td>
+            <td>{{ violation.description }}</td>
+            <td>{{ violation.violation_date }}</td>
+            <td>{{ violation.status }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+        <p>You have no parking violations. 🎉</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment History</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .payment-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+
+        .payment-card p {
+            margin: 8px 0;
+        }
+
+        .paid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Payment History</h2>
+
+    {% if payments %}
+
+        {% for payment in payments %}
+
+            <div class="payment-card">
+
+                <p>
+                    <strong>Payment ID:</strong>
+                    {{ payment.payment_id }}
+                </p>
+
+                <p>
+                    <strong>Session ID:</strong>
+                    {{ payment.session_id }}
+                </p>
+
+                <p>
+                    <strong>Amount:</strong>
+                    KSh {{ payment.amount }}
+                </p>
+
+                <p>
+                    <strong>Payment Method:</strong>
+                    {{ payment.payment_method }}
+                </p>
+
+                <p>
+                    <strong>Payment Reference:</strong>
+                    {{ payment.payment_reference or 'N/A' }}
+                </p>
+
+                <p>
+                    <strong>Payment Date:</strong>
+                    {{ payment.payment_date }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+
+                    {% if payment.status == 'Paid' %}
+                        <span class="paid">Paid</span>
+                    {% else %}
+                        {{ payment.status }}
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <p>No payment records found.</p>
+        </div>
+
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="back-button">
+        Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>
